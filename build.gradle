@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        maven {
+            name = 'forge'
+            url = 'http://files.minecraftforge.net/maven'
+        }
+        maven {
+            name = 'sponge'
+            url = 'https://repo.spongepowered.org/maven'
+        }
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.5-SNAPSHOT'
+    }
+}
+
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
+}
+
+group = pluginGroup
+version = pluginVersion
+sponge.plugin.id = pluginId
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+
+
+dependencies {
+    compile 'org.spongepowered:spongecommon:7.1.0-SNAPSHOT:dev'
+    compile 'org.spongepowered:mixin:0.7.5-SNAPSHOT'
+}
+
+minecraft {
+    version = "1.12.2-14.23.1.2555"
+    mappings = 'snapshot_20180101'
+}
+
+jar {
+    manifest.attributes(
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            'MixinConfigs': 'mixins.doublejumpmixins.json',
+            'FMLCorePluginContainsFMLMod': 'true',
+    )
+}
+
+reobf.jar {
+    mappingType = "SEARGE"
+}
+
+mixin {
+    add sourceSets.main, "mixins.doublejumpmixins.refmap.json"
+}
